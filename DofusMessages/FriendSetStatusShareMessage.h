@@ -1,0 +1,18 @@
+#ifndef FRIENDSETSTATUSSHAREMESSAGE_H
+#define FRIENDSETSTATUSSHAREMESSAGE_H
+
+#include "../BotCoreAPI/BotCoreAPI.h"
+#include <string>
+#include <vector>
+
+class FriendSetStatusShareMessage : public DeserializeInterface {
+public:
+    bool share = false;
+
+    void deserialize(CustomDataInput *input);
+
+private:
+    void _shareFunc(CustomDataInput *input);
+};
+
+#endif
