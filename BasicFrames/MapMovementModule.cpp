@@ -25,7 +25,7 @@ bool MapMovementModule::executeMovement(Packet *packet) {
     }
     if (isWaitingConfirmation && clock() - timeoutPoint > 10000 && isTimeout) {
         auto *toSend = new Packet(7525, 0, nullptr, 0, nullptr);
-        PacketSender::getInstance()->addPacketToSend(toSend);
+        PacketSender::getInstance()->sendPacket(toSend);
         isTimeout = false;
         return true;
     }

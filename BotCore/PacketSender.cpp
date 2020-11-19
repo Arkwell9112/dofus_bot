@@ -17,6 +17,7 @@ void PacketSender::setFlags(SOCKET s, int flags0, SEND nnsend0) {
 }
 
 void PacketSender::sendPacket(Packet *packet) {
+    printf("Sent %d\n", packet->getPacketId());
     unsigned int packetSizeSize = PacketSender::getPacketSizeSize(packet->getPacketSize());
     char buffer[6 + packetSizeSize + packet->getPacketSize()];
     unsigned int staticHeader = (packet->getPacketId() << 2) | packetSizeSize;
@@ -55,7 +56,6 @@ void PacketSender::updateSending() {
         for (int i = 0; i < toSendPackets.size(); i++) {
             if (toSendPackets.at(i).isReadyToSend()) {
                 Packet *currentPacket = toSendPackets.at(i).getPacket();
-                printf("Sent %d\n", currentPacket->getPacketId());
                 toSendPackets.erase(toSendPackets.begin() + i);
                 this->sendPacket(currentPacket);
             }

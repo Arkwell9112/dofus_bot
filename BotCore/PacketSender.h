@@ -16,6 +16,8 @@ public:
 
     void updateSending();
 
+    void sendPacket(Packet *packet);
+
 private:
     static unsigned int getPacketSizeSize(unsigned int packetSize);
 
@@ -28,8 +30,6 @@ private:
     SEND nnsend = nullptr;
 
     std::vector<WrappedPacket> toSendPackets;
-
-    void sendPacket(Packet *packet);
 
     std::thread *sendThread = nullptr;
 };

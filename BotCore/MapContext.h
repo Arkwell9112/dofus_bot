@@ -38,7 +38,15 @@ public:
 
     void setPlayerPos(MapPoint _playerPos);
 
-    unsigned int getCapabilities() const;
+    unsigned int getNeighborIdForChange(unsigned int direction);
+
+    static unsigned int getTopNeighborIdOffset();
+
+    static unsigned int getRightNeighborIdOffset();
+
+    static unsigned int getBottomNeighborIdOffset();
+
+    static unsigned int getLeftNeighborIdOffset();
 
     static bool isNodeinList(std::vector<Node> list, Node node);
 
@@ -55,8 +63,11 @@ public:
     static const unsigned int worldMapOffset = 10;
     static const unsigned int prioAndOutOffset = 12;
     static const unsigned int cellsOffset = 13;
-    static const unsigned int capabilitiesOffset = 573;
-    static const unsigned int blockSize = 577;
+    static const unsigned int topNeighborIdOffset = 573;
+    static const unsigned int rightNeighborIdOffset = 577;
+    static const unsigned int bottomNeighborIdOffset = 581;
+    static const unsigned int leftNeighborIdOffset = 585;
+    static const unsigned int blockSize = 589;
 private:
     explicit MapContext(char *directDataPointer);
 
@@ -68,7 +79,10 @@ private:
     short worldMap = -100;
     bool outdoor = false;
     bool hasPriorityOnWorldMap = false;
-    unsigned int capabilities = 0;
+    unsigned int topNeighborId = 0;
+    unsigned int rightNeighborId = 0;
+    unsigned int bottomNeighborId = 0;
+    unsigned int leftNeighborId = 0;
 
     MapPoint playerPos = MapPoint(0);
 

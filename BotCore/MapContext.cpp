@@ -46,7 +46,11 @@ MapContext::MapContext(unsigned int mapId) {
             posY = *reinterpret_cast<short *>(&mapsData[currentBlockOffset + posYOffset]);
             subAreaId = *reinterpret_cast<short *>(&mapsData[currentBlockOffset + subAreaIdOffset]);
             worldMap = *reinterpret_cast<short *>(&mapsData[currentBlockOffset + worldMapOffset]);
-            capabilities = *reinterpret_cast<unsigned int *>(&mapsData[currentBlockOffset + capabilitiesOffset]);
+            topNeighborId = *reinterpret_cast<unsigned int *>(&mapsData[currentBlockOffset + topNeighborIdOffset]);
+            rightNeighborId = *reinterpret_cast<unsigned int *>(&mapsData[currentBlockOffset + rightNeighborIdOffset]);
+            bottomNeighborId = *reinterpret_cast<unsigned int *>(&mapsData[currentBlockOffset +
+                                                                           bottomNeighborIdOffset]);
+            leftNeighborId = *reinterpret_cast<unsigned int *>(&mapsData[currentBlockOffset + leftNeighborIdOffset]);
             unsigned char box0 = *reinterpret_cast<unsigned char *>(&mapsData[currentBlockOffset + prioAndOutOffset]);
             if ((box0 & 1) != 0) {
                 hasPriorityOnWorldMap = true;
@@ -211,8 +215,7 @@ unsigned int MapContext::getNeighborId(unsigned int orientation) {
         unsigned int currentBlockOffset = i * blockSize;
         MapContext currentContext(&mapsData[currentBlockOffset]);
         if (currentContext.getPosX() == neighborPosX && currentContext.getPosY() == neighborPosY &&
-            currentContext.isOutdoor() && currentContext.isHasPriorityOnWorldMap() &&
-            worldMap == currentContext.getWorldMap()) {
+            currentContext.isHasPriorityOnWorldMap() && currentContext.isOutdoor()) {
             return currentContext.getMapId();
         }
     }
@@ -225,7 +228,10 @@ MapContext::MapContext(char *directDataPointer) {
     posY = *reinterpret_cast<short *>(&directDataPointer[posYOffset]);
     subAreaId = *reinterpret_cast<short *>(&directDataPointer[subAreaIdOffset]);
     worldMap = *reinterpret_cast<short *>(&directDataPointer[worldMapOffset]);
-    capabilities = *reinterpret_cast<unsigned int *>(&directDataPointer[capabilitiesOffset]);
+    topNeighborId = *reinterpret_cast<unsigned int *>(&directDataPointer[topNeighborIdOffset]);
+    rightNeighborId = *reinterpret_cast<unsigned int *>(&directDataPointer[rightNeighborIdOffset]);
+    bottomNeighborId = *reinterpret_cast<unsigned int *>(&directDataPointer[bottomNeighborIdOffset]);
+    leftNeighborId = *reinterpret_cast<unsigned int *>(&directDataPointer[leftNeighborIdOffset]);
     unsigned char box0 = *reinterpret_cast<unsigned char *>(&directDataPointer[prioAndOutOffset]);
     if ((box0 & 1) != 0) {
         hasPriorityOnWorldMap = true;
@@ -249,6 +255,32 @@ void MapContext::setPlayerPos(MapPoint _playerPos) {
     this->playerPos = _playerPos;
 }
 
-unsigned int MapContext::getCapabilities() const {
-    return capabilities;
+unsigned int MapContext::getTopNeighborIdOffset() {
+    return topNeighborIdOffset;
+}
+
+unsigned int MapContext::getRightNeighborIdOffset() {
+    return rightNeighborIdOffset;
+}
+
+unsigned int MapContext::getBottomNeighborIdOffset() {
+    return bottomNeighborIdOffset;
+}
+
+unsigned int MapContext::getLeftNeighborIdOffset() {
+    return leftNeighborIdOffset;
+}
+
+unsigned int MapContext::getNeighborIdForChange(unsigned int direction) {
+    switch (direction) {
+        case 0:
+            return this->topNeighborId;
+        case 2:
+            return this->rightNeighborId;
+        case 4:
+            return this->bottomNeighborId;
+        case 6:
+            return this->leftNeighborId;
+    }
+    return 0;
 }
