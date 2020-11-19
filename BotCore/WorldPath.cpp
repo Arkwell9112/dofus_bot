@@ -28,7 +28,7 @@ void WorldPath::calculatePath(MapPoint entry) {
                 pathOk = false;
             }
             if (!borderCells.empty() && pathOk) {
-                unsigned int neighborId = 256;
+                unsigned int neighborId = 0;
                 try {
                     neighborId = currentNode.getPosition().getNeighborId(i);
                 } catch (BotCoreException &e) {

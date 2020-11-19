@@ -1,6 +1,23 @@
 #include "PrintFrame.h"
+#include "CurrentMapMessage.h"
+#include "ChangeMapMessage.h"
+#include "../BotCore/MapContext.h"
 
 void PrintFrame::Handle(Packet *packet) {
+    if (packet->getPacketId() == 7422) {
+        packet->deserializePacket();
+        auto *message = dynamic_cast<CurrentMapMessage *>(packet->getMessage());
+        MapContext context((unsigned int) message->mapId);
+        printf("CurrentID: %d\n", context.getMapId());
+        printf("CurrentCapa: %d\n", context.getCapabilities());
+    }
+    if (packet->getPacketId() == 3575) {
+        packet->deserializePacket();
+        auto *message = dynamic_cast<ChangeMapMessage *>(packet->getMessage());
+        MapContext context((unsigned int) message->mapId);
+        printf("NextID: %d\n", context.getMapId());
+        printf("NextCapa: %d\n", context.getCapabilities());
+    }
     if (mapContextModule.getMapContext(packet, &context)) {
         printf("MapID: %d\n", context.getMapId());
         try {
@@ -35,25 +52,6 @@ void PrintFrame::Handle(Packet *packet) {
         }
     }
     worldPathModule.executeWorldPath(packet);
-    /*
-    if (messageNames == nullptr) {
-        messageNames = FileLoader::loadFile("C:\\Users\\Edouard\\AnkamaInjector\\DofusProtocol.txt", nullptr);
-    }
-    int idSize = snprintf(nullptr, 0, "|%d|", packet->getPacketId());
-    char idName[idSize + 1];
-    snprintf(idName, idSize + 1, "|%d|", packet->getPacketId());
-    char *name = strstr(messageNames, idName);
-    if (name != nullptr) {
-        int nameSize = 0;
-        while (name[nameSize] != "\r"[0]) {
-            nameSize++;
-        }
-        char fullName[nameSize + 1];
-        memcpy(fullName, name, nameSize);
-        fullName[nameSize] = "\0"[0];
-        printf("%s\n", fullName);
-    }
-     */
 }
 
 void PrintFrame::Awake() {

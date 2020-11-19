@@ -46,6 +46,7 @@ MapContext::MapContext(unsigned int mapId) {
             posY = *reinterpret_cast<short *>(&mapsData[currentBlockOffset + posYOffset]);
             subAreaId = *reinterpret_cast<short *>(&mapsData[currentBlockOffset + subAreaIdOffset]);
             worldMap = *reinterpret_cast<short *>(&mapsData[currentBlockOffset + worldMapOffset]);
+            capabilities = *reinterpret_cast<unsigned int *>(&mapsData[currentBlockOffset + capabilitiesOffset]);
             unsigned char box0 = *reinterpret_cast<unsigned char *>(&mapsData[currentBlockOffset + prioAndOutOffset]);
             if ((box0 & 1) != 0) {
                 hasPriorityOnWorldMap = true;
@@ -224,6 +225,7 @@ MapContext::MapContext(char *directDataPointer) {
     posY = *reinterpret_cast<short *>(&directDataPointer[posYOffset]);
     subAreaId = *reinterpret_cast<short *>(&directDataPointer[subAreaIdOffset]);
     worldMap = *reinterpret_cast<short *>(&directDataPointer[worldMapOffset]);
+    capabilities = *reinterpret_cast<unsigned int *>(&directDataPointer[capabilitiesOffset]);
     unsigned char box0 = *reinterpret_cast<unsigned char *>(&directDataPointer[prioAndOutOffset]);
     if ((box0 & 1) != 0) {
         hasPriorityOnWorldMap = true;
@@ -245,4 +247,8 @@ MapPoint MapContext::getPlayerPos() {
 
 void MapContext::setPlayerPos(MapPoint _playerPos) {
     this->playerPos = _playerPos;
+}
+
+unsigned int MapContext::getCapabilities() const {
+    return capabilities;
 }

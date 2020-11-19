@@ -38,6 +38,8 @@ public:
 
     void setPlayerPos(MapPoint _playerPos);
 
+    unsigned int getCapabilities() const;
+
     static bool isNodeinList(std::vector<Node> list, Node node);
 
     static void replaceNodeInList(std::vector<Node> *list, Node node);
@@ -53,7 +55,8 @@ public:
     static const unsigned int worldMapOffset = 10;
     static const unsigned int prioAndOutOffset = 12;
     static const unsigned int cellsOffset = 13;
-    static const unsigned int blockSize = 573;
+    static const unsigned int capabilitiesOffset = 573;
+    static const unsigned int blockSize = 577;
 private:
     explicit MapContext(char *directDataPointer);
 
@@ -65,6 +68,7 @@ private:
     short worldMap = -100;
     bool outdoor = false;
     bool hasPriorityOnWorldMap = false;
+    unsigned int capabilities = 0;
 
     MapPoint playerPos = MapPoint(0);
 
