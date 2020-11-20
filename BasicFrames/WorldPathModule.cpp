@@ -1,13 +1,15 @@
 #include "WorldPathModule.h"
 
 void WorldPathModule::initiatePathFinding(MapContext destination, MapContext context) {
-    WorldPath path(context, destination);
-    path.calculatePath(context.getPlayerPos());
-    this->worldPath = path.getPath();
-    this->pathPosition = 1;
-    changeMapModule.initiateMapChange(directionOfMap(context, worldPath.at(pathPosition)), context);
-    pathPosition += 1;
-    isWaitingForConfirmation = true;
+    if (destination.getPosX() != context.getPosX() || destination.getPosY() != context.getPosY()) {
+        WorldPath path(context, destination);
+        path.calculatePath(context.getPlayerPos());
+        this->worldPath = path.getPath();
+        this->pathPosition = 1;
+        changeMapModule.initiateMapChange(directionOfMap(context, worldPath.at(pathPosition)), context);
+        pathPosition += 1;
+        isWaitingForConfirmation = true;
+    }
 }
 
 unsigned int WorldPathModule::directionOfMap(MapContext origin, MapContext destination) {
@@ -20,7 +22,7 @@ unsigned int WorldPathModule::directionOfMap(MapContext origin, MapContext desti
     } else if (destination.getPosY() < origin.getPosY()) {
         return 0;
     }
-    return 8;
+    throw BotCoreException(7);
 }
 
 bool WorldPathModule::updatePathFinding(MapContext newContext) {
@@ -37,5 +39,7 @@ bool WorldPathModule::updatePathFinding(MapContext newContext) {
 }
 
 void WorldPathModule::executeWorldPath(Packet *packet) {
-    changeMapModule.executeMapChange(packet);
+    if (isWaitingForConfirmation) {
+        changeMapModule.executeMapChange(packet);
+    }
 }

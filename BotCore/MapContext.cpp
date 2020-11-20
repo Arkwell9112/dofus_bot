@@ -20,14 +20,6 @@ short MapContext::getWorldMap() const {
     return worldMap;
 }
 
-bool MapContext::isOutdoor() const {
-    return outdoor;
-}
-
-bool MapContext::isHasPriorityOnWorldMap() const {
-    return hasPriorityOnWorldMap;
-}
-
 char *MapContext::mapsData = nullptr;
 int MapContext::mapsDataSize = 0;
 
@@ -36,7 +28,6 @@ MapContext::MapContext(unsigned int mapId) {
         mapsData = FileLoader::loadFile(std::string("C:\\Users\\Edouard\\Documents\\DofusBot\\MapsData\\MapsData.bin"),
                                         &mapsDataSize);
     }
-
     for (int i = 0; i < mapsDataSize / blockSize; i++) {
         unsigned int currentBlockOffset = i * blockSize;
         unsigned int currentMapId = *reinterpret_cast<unsigned int *>(&mapsData[currentBlockOffset + mapIdOffset]);
@@ -51,7 +42,7 @@ MapContext::MapContext(unsigned int mapId) {
             bottomNeighborId = *reinterpret_cast<unsigned int *>(&mapsData[currentBlockOffset +
                                                                            bottomNeighborIdOffset]);
             leftNeighborId = *reinterpret_cast<unsigned int *>(&mapsData[currentBlockOffset + leftNeighborIdOffset]);
-            unsigned char box0 = *reinterpret_cast<unsigned char *>(&mapsData[currentBlockOffset + prioAndOutOffset]);
+            short box0 = *reinterpret_cast<short *>(&mapsData[currentBlockOffset + box0Offset]);
             if ((box0 & 1) != 0) {
                 hasPriorityOnWorldMap = true;
             }
@@ -59,6 +50,7 @@ MapContext::MapContext(unsigned int mapId) {
                 outdoor = true;
             }
             cellsData = &mapsData[currentBlockOffset + cellsOffset];
+            break;
         }
     }
 }
@@ -195,31 +187,52 @@ std::vector<MapPoint> MapContext::reconstructPathInList(std::vector<Node> list, 
 }
 
 unsigned int MapContext::getNeighborId(unsigned int orientation) {
-    int neighborPosX = posX;
-    int neighborPosY = posY;
+    int neighborX = posX;
+    int neighborY = posY;
     switch (orientation) {
         case 0:
-            neighborPosY--;
+            neighborY--;
             break;
         case 2:
-            neighborPosX++;
+            neighborX++;
             break;
         case 4:
-            neighborPosY++;
+            neighborY++;
             break;
         case 6:
-            neighborPosX--;
+            neighborX--;
             break;
+        default:
+            throw BotCoreException(7);
     }
+    std::vector<MapContext> preContexts;
     for (int i = 0; i < mapsDataSize / blockSize; i++) {
-        unsigned int currentBlockOffset = i * blockSize;
-        MapContext currentContext(&mapsData[currentBlockOffset]);
-        if (currentContext.getPosX() == neighborPosX && currentContext.getPosY() == neighborPosY &&
-            currentContext.isHasPriorityOnWorldMap() && currentContext.isOutdoor()) {
-            return currentContext.getMapId();
+        char *directDataPointer = &mapsData[i * blockSize];
+        MapContext currentContext(directDataPointer);
+        if (currentContext.getPosX() == neighborX && currentContext.getPosY() == neighborY &&
+            currentContext.isOutdoor() && currentContext.getWorldMap() == worldMap) {
+            if (currentContext.isHasPriorityOnWorldMap()) {
+                return currentContext.getMapId();
+            }
+            preContexts.push_back(currentContext);
         }
     }
-    throw BotCoreException(7);
+    if (preContexts.empty()) {
+        throw BotCoreException(7);
+    } else if (preContexts.size() == 1) {
+        return preContexts.at(0).getMapId();
+    } else {
+        unsigned int betterDistance = UINT32_MAX;
+        unsigned int betterId = 0;
+        for (int i = 0; i < preContexts.size(); i++) {
+            unsigned int distance = abs(preContexts.at(i).getMapId() - mapId);
+            if (distance < betterDistance) {
+                betterDistance = distance;
+                betterId = preContexts.at(i).getMapId();
+            }
+        }
+        return betterId;
+    }
 }
 
 MapContext::MapContext(char *directDataPointer) {
@@ -232,7 +245,7 @@ MapContext::MapContext(char *directDataPointer) {
     rightNeighborId = *reinterpret_cast<unsigned int *>(&directDataPointer[rightNeighborIdOffset]);
     bottomNeighborId = *reinterpret_cast<unsigned int *>(&directDataPointer[bottomNeighborIdOffset]);
     leftNeighborId = *reinterpret_cast<unsigned int *>(&directDataPointer[leftNeighborIdOffset]);
-    unsigned char box0 = *reinterpret_cast<unsigned char *>(&directDataPointer[prioAndOutOffset]);
+    short box0 = *reinterpret_cast<short *>(&directDataPointer[box0Offset]);
     if ((box0 & 1) != 0) {
         hasPriorityOnWorldMap = true;
     }
@@ -282,5 +295,13 @@ unsigned int MapContext::getNeighborIdForChange(unsigned int direction) {
         case 6:
             return this->leftNeighborId;
     }
-    return 0;
+    throw BotCoreException(7);
+}
+
+bool MapContext::isOutdoor() const {
+    return outdoor;
+}
+
+bool MapContext::isHasPriorityOnWorldMap() const {
+    return hasPriorityOnWorldMap;
 }

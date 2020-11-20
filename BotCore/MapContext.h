@@ -26,10 +26,6 @@ public:
 
     short getWorldMap() const;
 
-    bool isOutdoor() const;
-
-    bool isHasPriorityOnWorldMap() const;
-
     std::vector<MapPoint> getOpenBorderCells(unsigned int orientation);
 
     unsigned int getNeighborId(unsigned int orientation);
@@ -39,6 +35,10 @@ public:
     void setPlayerPos(MapPoint _playerPos);
 
     unsigned int getNeighborIdForChange(unsigned int direction);
+
+    bool isOutdoor() const;
+
+    bool isHasPriorityOnWorldMap() const;
 
     static unsigned int getTopNeighborIdOffset();
 
@@ -61,13 +61,13 @@ public:
     static const unsigned int posYOffset = 6;
     static const unsigned int subAreaIdOffset = 8;
     static const unsigned int worldMapOffset = 10;
-    static const unsigned int prioAndOutOffset = 12;
-    static const unsigned int cellsOffset = 13;
-    static const unsigned int topNeighborIdOffset = 573;
-    static const unsigned int rightNeighborIdOffset = 577;
-    static const unsigned int bottomNeighborIdOffset = 581;
-    static const unsigned int leftNeighborIdOffset = 585;
-    static const unsigned int blockSize = 589;
+    static const unsigned int topNeighborIdOffset = 12;
+    static const unsigned int rightNeighborIdOffset = 16;
+    static const unsigned int bottomNeighborIdOffset = 20;
+    static const unsigned int leftNeighborIdOffset = 24;
+    static const unsigned int box0Offset = 28;
+    static const unsigned int cellsOffset = 30;
+    static const unsigned int blockSize = 590;
 private:
     explicit MapContext(char *directDataPointer);
 

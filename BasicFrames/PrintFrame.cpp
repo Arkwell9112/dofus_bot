@@ -1,18 +1,28 @@
 #include "PrintFrame.h"
-#include "CurrentMapMessage.h"
 #include "ChangeMapMessage.h"
-#include "../BotCore/MapContext.h"
 
 void PrintFrame::Handle(Packet *packet) {
     if (mapContextModule.getMapContext(packet, &context)) {
         if (isFirst) {
-            worldPathModule.initiatePathFinding(MapContext(13, -28), context);
+            try {
+                worldPathModule.initiatePathFinding(MapContext(-3, -7), context);
+            } catch (BotCoreException &e) {
+                printf("%s", e.getMessage());
+            }
             isFirst = false;
         } else {
-            worldPathModule.updatePathFinding(context);
+            try {
+                worldPathModule.updatePathFinding(context);
+            } catch (BotCoreException &e) {
+                printf("%s", e.getMessage());
+            }
         }
     }
-    worldPathModule.executeWorldPath(packet);
+    try {
+        worldPathModule.executeWorldPath(packet);
+    } catch (BotCoreException &e) {
+        printf("%s", e.getMessage());
+    }
 }
 
 
