@@ -32,7 +32,11 @@ void WorldNode::setParent(MapContext parent0) {
         border = 6;
     }
     std::vector<MapPoint> borderCells = position.getOpenBorderCells(border);
-    entryPosition = borderCells.at(WorldNode::getLogicalMiddle(borderCells.size()));
+    if (!borderCells.empty()) {
+        entryPosition = borderCells.at(WorldNode::getLogicalMiddle(borderCells.size()));
+    } else {
+        throw BotCoreException(8);
+    }
     parent = parent0;
 }
 
