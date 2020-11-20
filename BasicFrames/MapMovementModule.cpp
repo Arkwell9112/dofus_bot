@@ -1,6 +1,7 @@
 #include "MapMovementModule.h"
 
 void MapMovementModule::initiateMapMovement(MapPoint destination, MapContext context) {
+    printf("CellGoingTo: X = %d | Y = %d\n", destination.getPosX(), destination.getPosY());
     std::vector<MapPoint> prePath = context.findPath(context.getPlayerPos(), destination);
     MovementPath path(prePath);
     std::vector<unsigned int> serverPath = path.toServerMovements();

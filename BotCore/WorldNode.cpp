@@ -35,7 +35,7 @@ void WorldNode::setParent(MapContext parent0) {
     if (!borderCells.empty()) {
         entryPosition = borderCells.at(WorldNode::getLogicalMiddle(borderCells.size()));
     } else {
-        throw BotCoreException(8);
+        entryPosition = MapPoint(0, 0);
     }
     parent = parent0;
 }

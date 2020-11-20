@@ -38,14 +38,9 @@ void WorldPath::calculatePath(MapPoint entry) {
                     MapContext newContext(neighborId);
                     WorldNode newNode(newContext);
                     if (!WorldPath::isWorldNodeInList(closeList, newNode)) {
-                        try {
-                            newNode.setParent(currentNode.getPosition());
-                            newNode.setCost(destination);
-                            WorldPath::replaceWorldNodeInList(&openList, newNode);
-                        } catch (BotCoreException &e) {
-                            printf("%s", e.getMessage());
-                        }
-
+                        newNode.setParent(currentNode.getPosition());
+                        newNode.setCost(destination);
+                        WorldPath::replaceWorldNodeInList(&openList, newNode);
                     }
                 }
             }
