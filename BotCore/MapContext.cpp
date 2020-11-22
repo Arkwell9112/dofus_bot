@@ -305,3 +305,7 @@ bool MapContext::isOutdoor() const {
 bool MapContext::isHasPriorityOnWorldMap() const {
     return hasPriorityOnWorldMap;
 }
+
+char *MapContext::getCellsData() const {
+    return cellsData;
+}

@@ -10,6 +10,8 @@
 
 class MapContext {
 public:
+    char *getCellsData() const;
+
     explicit MapContext(unsigned int mapId);
 
     MapContext(short posX, short posY);

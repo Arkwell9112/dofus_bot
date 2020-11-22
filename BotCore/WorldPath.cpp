@@ -38,9 +38,9 @@ void WorldPath::calculatePath(MapPoint entry) {
                     MapContext newContext(neighborId);
                     WorldNode newNode(newContext);
                     if (!WorldPath::isWorldNodeInList(closeList, newNode)) {
-                        newNode.setParent(currentNode.getPosition());
+                        newNode.setParent(currentNode.getPosition(), i);
                         newNode.setCost(destination);
-                        WorldPath::replaceWorldNodeInList(&openList, newNode);
+                        WorldPath::replaceWorldNodeInList(&openList, newNode, i);
                     }
                 }
             }
@@ -70,13 +70,13 @@ bool WorldPath::isWorldNodeInList(std::vector<WorldNode> list, WorldNode node) {
     return false;
 }
 
-void WorldPath::replaceWorldNodeInList(std::vector<WorldNode> *list, WorldNode node) {
+void WorldPath::replaceWorldNodeInList(std::vector<WorldNode> *list, WorldNode node, unsigned int testingOrientation) {
     bool found = false;
     for (int i = 0; i < list->size(); i++) {
         if (list->at(i).getPosition().getPosX() == node.getPosition().getPosX() &&
             list->at(i).getPosition().getPosY() == node.getPosition().getPosY()) {
             found = true;
-            list->at(i).setParent(node.getParent());
+            list->at(i).setParent(node.getParent(), testingOrientation);
             break;
         }
     }

@@ -9,7 +9,7 @@ public:
 
     void setEntryPosition(MapPoint entry);
 
-    void setParent(MapContext parent);
+    void setParent(MapContext parent, unsigned int testingOrientation);
 
     void setCost(MapContext destination);
 

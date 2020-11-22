@@ -11,7 +11,7 @@ public:
 
     static bool isWorldNodeInList(std::vector<WorldNode> list, WorldNode node);
 
-    static void replaceWorldNodeInList(std::vector<WorldNode> *list, WorldNode node);
+    static void replaceWorldNodeInList(std::vector<WorldNode> *list, WorldNode node, unsigned int testingOrientation);
 
     static WorldNode getBetterNodeInList(std::vector<WorldNode> *list);
 

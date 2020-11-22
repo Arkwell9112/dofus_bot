@@ -16,7 +16,6 @@ bool ChangeMapModule::executeMapChange(Packet *packet) {
         char packetContent[9];
         CustomDataOutput output(packetContent);
         unsigned int neighborId = context.getNeighborIdForChange(direction);
-        printf("GoingToID: %d\n", neighborId);
         output.writeDouble(neighborId);
         output.writeBoolean(false);
         auto *toSend = new Packet(3575, 0, nullptr, output.getPosition(), packetContent);

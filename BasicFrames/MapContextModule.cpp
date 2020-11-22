@@ -13,7 +13,7 @@ bool MapContextModule::getMapContext(Packet *packet, MapContext *pMapContext) {
         auto *message = reinterpret_cast<MapComplementaryInformationsDataMessage *>(packet->getMessage());
         if (message->mapId == context.getMapId()) {
             for (int i = 0; i < message->actors.size(); i++) {
-                if (message->actors.at(i).contextualId == 337467539667) {
+                if (message->actors.at(i).contextualId == 290546254034) {
                     context.setPlayerPos(MapPoint(message->actors.at(i).disposition.cellId));
                     *pMapContext = context;
                     return true;

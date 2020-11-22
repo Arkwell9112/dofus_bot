@@ -33,7 +33,6 @@ bool WorldPathModule::updatePathFinding(MapContext newContext) {
     }
     if (isWaitingForConfirmation) {
         changeMapModule.initiateMapChange(directionOfMap(newContext, worldPath.at(pathPosition)), newContext);
-        printf("GoingTo: %d\n", directionOfMap(newContext, worldPath.at(pathPosition)));
         pathPosition += 1;
     }
     return false;

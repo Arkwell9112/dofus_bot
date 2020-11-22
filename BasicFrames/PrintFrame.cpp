@@ -3,18 +3,13 @@
 
 void PrintFrame::Handle(Packet *packet) {
     if (mapContextModule.getMapContext(packet, &context)) {
-        printf("CurrentMapID: %d\n", context.getMapId());
-        printf("TopID: %d\n", context.getNeighborIdForChange(0));
-        printf("RightID: %d\n", context.getNeighborIdForChange(2));
-        printf("BottomID: %d\n", context.getNeighborIdForChange(4));
-        printf("LeftID: %d\n", context.getNeighborIdForChange(6));
         if (isFirst) {
+            isFirst = false;
             try {
-                worldPathModule.initiatePathFinding(MapContext(7, 1), context);
+                worldPathModule.initiatePathFinding(MapContext(13, 26), context);
             } catch (BotCoreException &e) {
                 printf("%s", e.getMessage());
             }
-            isFirst = false;
         } else {
             try {
                 worldPathModule.updatePathFinding(context);
@@ -23,11 +18,7 @@ void PrintFrame::Handle(Packet *packet) {
             }
         }
     }
-    try {
-        worldPathModule.executeWorldPath(packet);
-    } catch (BotCoreException &e) {
-        printf("%s", e.getMessage());
-    }
+    worldPathModule.executeWorldPath(packet);
 }
 
 

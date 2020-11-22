@@ -22,20 +22,13 @@ WorldNode::WorldNode(MapContext position) {
     this->entryPosition = MapPoint(0, 0);
 }
 
-void WorldNode::setParent(MapContext parent0) {
-    unsigned int border = 0;
-    if (parent0.getPosX() > position.getPosX()) {
-        border = 2;
-    } else if (parent0.getPosY() > position.getPosY()) {
-        border = 4;
-    } else if (parent0.getPosX() < position.getPosX()) {
-        border = 6;
-    }
-    std::vector<MapPoint> borderCells = position.getOpenBorderCells(border);
+void WorldNode::setParent(MapContext parent0, unsigned int testingOrientation) {
+    unsigned int realOrientation = (testingOrientation + 4) % 8;
+    std::vector<MapPoint> borderCells = position.getOpenBorderCells(realOrientation);
     if (!borderCells.empty()) {
-        entryPosition = borderCells.at(WorldNode::getLogicalMiddle(borderCells.size()));
+        entryPosition = borderCells.at(getLogicalMiddle(borderCells.size()));
     } else {
-        entryPosition = MapPoint(0, 0);
+        entryPosition = MapPoint(16, 0);
     }
     parent = parent0;
 }
