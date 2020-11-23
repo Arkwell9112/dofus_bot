@@ -46,7 +46,6 @@ void PacketProcessor::Process(char *buffer, int len, unsigned int address, bool 
         this->frame->Handle(packet);
         delete packet;
     }
-    //PacketSender::getInstance()->updateSending();
 }
 
 unsigned int PacketProcessor::getGlobalInstanceId() {
