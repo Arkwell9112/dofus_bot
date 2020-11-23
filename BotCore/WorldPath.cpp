@@ -11,7 +11,7 @@ void WorldPath::calculatePath(MapPoint entry) {
     WorldNode currentNode(origin);
     currentNode.setEntryPosition(entry);
     bool isBegin = true;
-    while (!openList.empty() || isBegin) {
+    while (true || isBegin) {
         isBegin = false;
         for (int i = 0; i < 8; i += 2) {
             std::vector<MapPoint> borderCells = currentNode.getPosition().getOpenBorderCells(i);

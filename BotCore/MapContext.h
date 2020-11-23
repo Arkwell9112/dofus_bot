@@ -46,6 +46,8 @@ public:
 
     static unsigned int getRightNeighborIdOffset();
 
+    char *getFloorCellsData() const;
+
     static unsigned int getBottomNeighborIdOffset();
 
     static unsigned int getLeftNeighborIdOffset();
@@ -69,12 +71,14 @@ public:
     static const unsigned int leftNeighborIdOffset = 24;
     static const unsigned int box0Offset = 28;
     static const unsigned int cellsOffset = 30;
-    static const unsigned int blockSize = 590;
+    static const unsigned int floorOffset = 590;
+    static const unsigned int blockSize = 1150;
 private:
     explicit MapContext(char *directDataPointer);
 
     unsigned int mapId = 0;
     char *cellsData = nullptr;
+    char *floorCellsData = nullptr;
     short posX = -1000;
     short posY = -1000;
     short subAreaId = -1;

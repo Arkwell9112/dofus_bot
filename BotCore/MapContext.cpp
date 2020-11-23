@@ -50,6 +50,7 @@ MapContext::MapContext(unsigned int mapId) {
                 outdoor = true;
             }
             cellsData = &mapsData[currentBlockOffset + cellsOffset];
+            floorCellsData = &mapsData[currentBlockOffset + floorOffset];
             break;
         }
     }
@@ -92,7 +93,7 @@ std::vector<MapPoint> MapContext::findPath(MapPoint origin, MapPoint destination
     std::vector<Node> closeList;
     Node currentNode(origin);
     bool isBegin = true;
-    while (!openList.empty() || isBegin) {
+    while (true || isBegin) {
         isBegin = false;
         for (int i = 0; i < 8; i++) {
             int currentPosX = currentNode.getPosition().getPosX() + directionEnum.getVectorFromDirection(i).getPosX();
@@ -100,10 +101,13 @@ std::vector<MapPoint> MapContext::findPath(MapPoint origin, MapPoint destination
             if (MapPoint::isValidCoord(currentPosX, currentPosY)) {
                 Node newNode(MapPoint(currentPosX, currentPosY));
                 if ((cellsData[newNode.getPosition().getCellId()] & 1) != 0) {
-                    if (!isNodeinList(closeList, newNode)) {
-                        newNode.setParent(currentNode.getPosition());
-                        newNode.setCost(destination);
-                        MapContext::replaceNodeInList(&openList, newNode);
+                    if (abs(floorCellsData[newNode.getPosition().getCellId()] -
+                            floorCellsData[currentNode.getPosition().getCellId()]) <= 3) {
+                        if (!isNodeinList(closeList, newNode)) {
+                            newNode.setParent(currentNode.getPosition());
+                            newNode.setCost(destination);
+                            MapContext::replaceNodeInList(&openList, newNode);
+                        }
                     }
                 }
             }
@@ -253,6 +257,7 @@ MapContext::MapContext(char *directDataPointer) {
         outdoor = true;
     }
     cellsData = &directDataPointer[cellsOffset];
+    floorCellsData = &directDataPointer[floorOffset];
 }
 
 MapContext::MapContext(short posX, short posY) {
@@ -308,4 +313,8 @@ bool MapContext::isHasPriorityOnWorldMap() const {
 
 char *MapContext::getCellsData() const {
     return cellsData;
+}
+
+char *MapContext::getFloorCellsData() const {
+    return floorCellsData;
 }

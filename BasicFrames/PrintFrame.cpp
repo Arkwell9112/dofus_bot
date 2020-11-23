@@ -6,7 +6,7 @@ void PrintFrame::Handle(Packet *packet) {
         if (isFirst) {
             isFirst = false;
             try {
-                worldPathModule.initiatePathFinding(MapContext(13, 26), context);
+                worldPathModule.initiatePathFinding(MapContext(5, -18), context);
             } catch (BotCoreException &e) {
                 printf("%s", e.getMessage());
             }
