@@ -19,10 +19,13 @@ public:
 
     std::vector<MapContext> getPath();
 
+    static bool isMapBanned(MapContext context);
+
 private:
     MapContext origin = MapContext((unsigned int) 0);
     MapContext destination = MapContext((unsigned int) 0);
     std::vector<MapContext> path;
+    static std::vector<MapContext> bannedMaps;
 };
 
 

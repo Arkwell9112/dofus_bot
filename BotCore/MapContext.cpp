@@ -1,4 +1,5 @@
 #include "MapContext.h"
+#include "PathHelper.h"
 
 unsigned int MapContext::getMapId() const {
     return mapId;
@@ -25,7 +26,7 @@ int MapContext::mapsDataSize = 0;
 
 MapContext::MapContext(unsigned int mapId) {
     if (mapsData == nullptr) {
-        mapsData = FileLoader::loadFile(std::string("C:\\Users\\Edouard\\Documents\\DofusBot\\MapsData\\MapsData.bin"),
+        mapsData = FileLoader::loadFile(PathHelper::getPath() + "\\MapsData.bin",
                                         &mapsDataSize);
     }
     for (int i = 0; i < mapsDataSize / blockSize; i++) {

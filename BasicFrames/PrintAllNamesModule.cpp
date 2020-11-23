@@ -1,11 +1,13 @@
 #include <cstring>
 #include "PrintAllNamesModule.h"
 
+#include "../BotCore/PathHelper.h"
+
 char *PrintAllNamesModule::messageNames = nullptr;
 
 void PrintAllNamesModule::printPacket(Packet *packet) {
     if (messageNames == nullptr) {
-        messageNames = FileLoader::loadFile("C:\\Users\\Edouard\\AnkamaInjector\\DofusProtocol.txt", nullptr);
+        messageNames = FileLoader::loadFile(PathHelper::getPath() + "\\DofusProtocol.txt", nullptr);
     }
     int idSize = snprintf(nullptr, 0, "|%d|", packet->getPacketId());
     char idName[idSize + 1];

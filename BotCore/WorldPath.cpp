@@ -1,5 +1,7 @@
 #include "WorldPath.h"
 
+std::vector<MapContext> WorldPath::bannedMaps = {MapContext(3, -17), MapContext(6, 13)};
+
 WorldPath::WorldPath(MapContext origin, MapContext destination) {
     this->origin = origin;
     this->destination = destination;
@@ -39,7 +41,7 @@ void WorldPath::calculatePath(MapPoint entry) {
                 if (neighborId != 256) {
                     MapContext newContext(neighborId);
                     WorldNode newNode(newContext);
-                    if (!WorldPath::isWorldNodeInList(closeList, newNode)) {
+                    if (!WorldPath::isWorldNodeInList(closeList, newNode) && !WorldPath::isMapBanned(newContext)) {
                         newNode.setParent(currentNode.getPosition(), i);
                         newNode.setCost(destination, additiveCost);
                         WorldPath::replaceWorldNodeInList(&openList, newNode, i);
@@ -134,4 +136,13 @@ std::vector<MapContext> WorldPath::reconstructPathInList(std::vector<WorldNode> 
 
 std::vector<MapContext> WorldPath::getPath() {
     return this->path;
+}
+
+bool WorldPath::isMapBanned(MapContext context) {
+    for (int i = 0; i < bannedMaps.size(); i++) {
+        if (context.getPosX() == bannedMaps.at(i).getPosX() && context.getPosY() == bannedMaps.at(i).getPosY()) {
+            return true;
+        }
+    }
+    return false;
 }
