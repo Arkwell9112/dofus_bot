@@ -11,7 +11,9 @@ void WorldPath::calculatePath(MapPoint entry) {
     WorldNode currentNode(origin);
     currentNode.setEntryPosition(entry);
     bool isBegin = true;
+    unsigned int additiveCost = 0;
     while (true || isBegin) {
+        additiveCost++;
         isBegin = false;
         for (int i = 0; i < 8; i += 2) {
             std::vector<MapPoint> borderCells = currentNode.getPosition().getOpenBorderCells(i);
@@ -39,7 +41,7 @@ void WorldPath::calculatePath(MapPoint entry) {
                     WorldNode newNode(newContext);
                     if (!WorldPath::isWorldNodeInList(closeList, newNode)) {
                         newNode.setParent(currentNode.getPosition(), i);
-                        newNode.setCost(destination);
+                        newNode.setCost(destination, additiveCost);
                         WorldPath::replaceWorldNodeInList(&openList, newNode, i);
                     }
                 }

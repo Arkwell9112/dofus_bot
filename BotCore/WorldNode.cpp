@@ -37,9 +37,10 @@ unsigned int WorldNode::getLogicalMiddle(unsigned int value) {
     return (value - (value % 2)) / 2;
 }
 
-void WorldNode::setCost(MapContext destination) {
+void WorldNode::setCost(MapContext destination, unsigned int additiveCost) {
     cost = sqrt(
-            pow(destination.getPosX() - position.getPosX(), 2) + pow(destination.getPosY() - position.getPosY(), 2));
+            pow(destination.getPosX() - position.getPosX(), 2) + pow(destination.getPosY() - position.getPosY(), 2)) +
+           additiveCost;
 }
 
 void WorldNode::setEntryPosition(MapPoint entry) {

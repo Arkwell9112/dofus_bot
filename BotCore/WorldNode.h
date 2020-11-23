@@ -11,7 +11,7 @@ public:
 
     void setParent(MapContext parent, unsigned int testingOrientation);
 
-    void setCost(MapContext destination);
+    void setCost(MapContext destination, unsigned int additiveCost);
 
     MapContext getPosition();
 
